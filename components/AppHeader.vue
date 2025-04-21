@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 
+const { t } = useI18n();
+
 const { toggleTheme } = useStrictTheme();
 </script>
 
@@ -9,7 +11,7 @@ const { toggleTheme } = useStrictTheme();
     <div flex flex-col>
       <NuxtImg src="/aigents_logo.svg" width="400" />
       <h1 class="text-2xl md:text-3xl sm:tracking-[8px] font-bold">
-        Find your next car
+        {{ t("slogan") }}
       </h1>
     </div>
     <div class="flex justify-end">
@@ -24,6 +26,7 @@ const { toggleTheme } = useStrictTheme();
         />
         <span class="sr-only">Toggle theme</span>
       </Button>
+      <LanguageSelector />
     </div>
   </div>
 

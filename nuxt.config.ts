@@ -5,7 +5,13 @@ export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "shadcn-nuxt", "@nuxtjs/color-mode", "@nuxt/image"],
+  modules: [
+    "@nuxt/eslint",
+    "shadcn-nuxt",
+    "@nuxtjs/color-mode",
+    "@nuxt/image",
+    "@nuxtjs/i18n",
+  ],
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],
@@ -29,5 +35,8 @@ export default defineNuxtConfig({
       title: "AIGents - Find your next car",
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
     },
+  },
+  i18n: {
+    vueI18n: "~/locales/i18n.config.ts",
   },
 });
