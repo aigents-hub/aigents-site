@@ -1,72 +1,151 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import type { Car } from "~/types/car";
 
-interface AutomobileItem {
-  title: string;
-  model: string;
-  description: string;
-  specs: Record<string, string>;
-  image: string;
-}
-interface AutomobilePayload {
-  items: AutomobileItem[];
-}
+defineProps<{
+  payload: Car;
+}>();
 
-const props = defineProps<{ payload: AutomobilePayload }>();
-const payload = props.payload;
+const formatHeader = (str: string): string => {
+  return str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase())
+    .trim();
+};
 
-const schema: Array<{ key: keyof AutomobileItem; label: string }> = [
-  { key: "title", label: "Título" },
-  { key: "model", label: "Modelo" },
-  { key: "description", label: "Descripción" },
-];
+// Add or modify the formatValue method
+const formatValue = (value: unknown): string => {
+  if (value === undefined || value === null) return "-";
+
+  // Handle arrays
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => {
+        if (typeof item === "object") {
+          // Special handling for wheel objects
+          if ("name" in item && "size" in item) {
+            return `${item.name} ${item.size}`;
+          }
+          return Object.values(item).join(" ");
+        }
+        return item.toString();
+      })
+      .join(", ");
+  }
+
+  // Handle objects
+  if (typeof value === "object") {
+    return Object.values(value).join(" ");
+  }
+
+  // Handle primitive values
+  return value.toString();
+};
+
+const hasChildren = (value: unknown): boolean => {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+};
 </script>
 
 <template>
-  <div v-for="item in payload.items" :key="item.title" class="automobile">
-    <div v-for="field in schema" :key="field.key" class="field">
-      <strong>{{ field.label }}:</strong> {{ (item as any)[field.key] }}
-    </div>
+  <Table class="text-black">
+    <TableHeader>
+      <TableRow class="border-none bg-white hover:bg-white">
+        <TableHead />
+        <TableHead class="text-center">
+          <NuxtImg
+            :src="payload.images[0].url"
+            class="w-[350px] max-w-full inline-block"
+          />
+        </TableHead>
+      </TableRow>
+    </TableHeader>
 
-    <table class="tech-specs">
-      <thead>
-        <tr>
-          <th>Especificación</th>
-          <th>Valor</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(val, key) in item.specs" :key="key">
-          <td>{{ key }}</td>
-          <td>{{ val }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mb-4" />
 
-    <img :src="item.image" alt="Imagen del vehículo" />
-  </div>
+    <TableBody>
+      <template v-for="(value, key) in payload.specs" :key="key">
+        <!-- Parent property row -->
+        <TableRow
+          class="border-none bg-sky-50"
+          :class="[
+            {
+              'hover:bg-sky-50':
+                hasChildren(value) ||
+                (Array.isArray(value) &&
+                  value.length > 0 &&
+                  typeof value[0] === 'object'),
+              'dark:hover:bg-white':
+                !hasChildren(value) &&
+                (!Array.isArray(value) || typeof value[0] !== 'object'),
+            },
+          ]"
+        >
+          <TableCell class="font-medium">
+            {{ formatHeader(key) }}
+          </TableCell>
+          <TableCell
+            :class="{
+              'border-l':
+                typeof value !== 'object' ||
+                (Array.isArray(value) && typeof value[0] !== 'object'),
+            }"
+          >
+            <span
+              v-if="
+                typeof value !== 'object' ||
+                (Array.isArray(value) && typeof value[0] !== 'object')
+              "
+            >
+              {{ formatValue(payload.specs[key]) }}
+            </span>
+          </TableCell>
+        </TableRow>
+
+        <!-- Special handling for wheels array -->
+        <template
+          v-if="
+            Array.isArray(value) &&
+            value.length > 0 &&
+            typeof value[0] === 'object'
+          "
+        >
+          <TableRow
+            v-for="subKey in ['name', 'size']"
+            :key="subKey"
+            class="bg-sky-50 dark:hover:bg-white"
+          >
+            <TableCell class="font-medium">
+              {{ formatHeader(subKey) }}
+            </TableCell>
+            <TableCell class="border-l">
+              {{
+                Array.isArray(payload.specs[key])
+                  ? payload.specs[key][0]?.[subKey]
+                  : "-"
+              }}
+            </TableCell>
+          </TableRow>
+        </template>
+
+        <div v-if="!hasChildren(value)" class="flex mb-4" />
+
+        <!-- Child properties for objects -->
+        <template v-if="hasChildren(value)">
+          <TableRow
+            v-for="(subvalue, subKey) in value"
+            :key="subKey"
+            class="bg-sky-50 dark:hover:bg-white"
+          >
+            <TableCell class="font-medium">
+              {{ formatHeader(subKey) }}
+            </TableCell>
+            <TableCell class="border-l">
+              {{ formatValue(payload.specs[key]?.[subKey]) }}
+            </TableCell>
+          </TableRow>
+        </template>
+        <div v-if="hasChildren(value)" class="flex mb-4" />
+      </template>
+    </TableBody>
+  </Table>
 </template>
-
-<style scoped>
-.automobile {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.tech-specs {
-  width: 100%;
-  border-collapse: collapse;
-}
-.tech-specs th,
-.tech-specs td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-}
-.tech-specs th {
-  background: #f5f5f5;
-}
-img {
-  max-width: 100%;
-  border-radius: 4px;
-}
-</style>

@@ -49,39 +49,14 @@ onMounted(() => {
     }
   };
 });
-
-function close() {
-  visible.value = false;
-}
 </script>
 
 <template>
-  <div v-if="visible" class="notification-popup">
-    <component :is="currentComponent" :payload="payload" />
-    <button class="close-btn" @click="close">&times;</button>
+  <div v-if="visible">
+    <AppModal v-model="visible">
+      <div class="text-black mt-8 mb-4">
+        <component :is="currentComponent" :payload="payload" />
+      </div>
+    </AppModal>
   </div>
 </template>
-
-<style scoped>
-.notification-popup {
-  position: fixed;
-  left: 10%;
-  width: 80%;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  padding: 1rem;
-  z-index: 1000;
-}
-.close-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-</style>

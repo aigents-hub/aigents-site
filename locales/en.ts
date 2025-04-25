@@ -1,5 +1,7 @@
 export default {
+  comparison: "Comparison",
   connected: "Connected",
+  close: "Close",
   disconnected: "Disconnected",
   selectLanguage: "Select Language",
   sessionId: "Session ID",

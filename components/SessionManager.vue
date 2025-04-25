@@ -20,8 +20,8 @@ const startSession = async () => {
     }
     const json = await res.json();
     sessionId.value = json.sessionId;
-  } catch (err: any) {
-    error.value = err.message || "Unexpected error";
+  } catch (err: unknown) {
+    error.value = err instanceof Error ? err.message : "Unexpected error";
   } finally {
     loading.value = false;
   }
@@ -53,6 +53,8 @@ const toggleSession = () => {
     <ConversationComponent :session-id="sessionId" :host="host" />
     <NotificationPopup v-if="sessionId" :session-id="sessionId" :host="host" />
     <p v-if="error" class="text-destructive">{{ error }}</p>
-    <p v-if="sessionId" class="text-xl">t('sessionID'): {{ sessionId }}</p>
+    <p v-if="sessionId" class="text-xl">
+      {{ t("sessionId") }}: {{ sessionId }}
+    </p>
   </div>
 </template>
