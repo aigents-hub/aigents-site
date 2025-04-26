@@ -7,7 +7,7 @@ const { toggleTheme } = useStrictTheme();
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_100px] mt-4 gap-4">
+  <div class="grid grid-cols-[1fr_100px] my-4 gap-4">
     <div flex flex-col>
       <NuxtImg src="/aigents_logo.svg" width="400" />
       <h1 class="text-2xl md:text-3xl sm:tracking-[8px] font-bold">

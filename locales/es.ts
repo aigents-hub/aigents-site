@@ -1,5 +1,6 @@
 export default {
-  comparison: "Comparativa",
+  carComparisonTable: "Tabla comparativa de autos",
+  carSpecs: "Especificaciones del auto",
   connected: "Conectado",
   close: "Cerrar",
   disconnected: "Desconectado",

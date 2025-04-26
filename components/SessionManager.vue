@@ -44,7 +44,7 @@ const toggleSession = () => {
   <div class="flex flex-col items-center justify-center gap-4">
     <Button
       :variant="sessionId ? 'success' : 'default'"
-      class="cursor-pointer"
+      class="text-[1rem] cursor-pointer"
       @click="toggleSession"
     >
       {{ sessionId ? t("stopSession") : t("startSession") }}

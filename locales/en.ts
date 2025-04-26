@@ -1,5 +1,6 @@
 export default {
-  comparison: "Comparison",
+  carComparisonTable: "Car comparison table",
+  carSpecs: "Car specifications",
   connected: "Connected",
   close: "Close",
   disconnected: "Disconnected",

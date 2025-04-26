@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Car } from "~/types/car";
 
+const { t } = useI18n();
+
 defineProps<{
   payload: Car;
 }>();
@@ -47,105 +49,122 @@ const hasChildren = (value: unknown): boolean => {
 </script>
 
 <template>
-  <Table class="text-black">
-    <TableHeader>
-      <TableRow class="border-none bg-white hover:bg-white">
-        <TableHead />
-        <TableHead class="text-center">
-          <NuxtImg
-            :src="payload.images[0].url"
-            class="w-[350px] max-w-full inline-block"
-          />
-        </TableHead>
-      </TableRow>
-    </TableHeader>
+  <div>
+    <h2 class="text-center text-xl md:text-5xl font-semibold uppercase mb-8">
+      {{ t("carSpecs") }}
+    </h2>
 
-    <div class="mb-4" />
-
-    <TableBody>
-      <template v-for="(value, key) in payload.specs" :key="key">
-        <!-- Parent property row -->
-        <TableRow
-          class="border-none bg-sky-50"
-          :class="[
-            {
-              'hover:bg-sky-50':
-                hasChildren(value) ||
-                (Array.isArray(value) &&
-                  value.length > 0 &&
-                  typeof value[0] === 'object'),
-              'dark:hover:bg-white':
-                !hasChildren(value) &&
-                (!Array.isArray(value) || typeof value[0] !== 'object'),
-            },
-          ]"
-        >
-          <TableCell class="font-medium">
-            {{ formatHeader(key) }}
-          </TableCell>
-          <TableCell
-            :class="{
-              'border-l':
-                typeof value !== 'object' ||
-                (Array.isArray(value) && typeof value[0] !== 'object'),
-            }"
-          >
-            <span
-              v-if="
-                typeof value !== 'object' ||
-                (Array.isArray(value) && typeof value[0] !== 'object')
-              "
-            >
-              {{ formatValue(payload.specs[key]) }}
-            </span>
-          </TableCell>
+    <Table class="text-black">
+      <TableHeader>
+        <TableRow class="border-none bg-white hover:bg-white">
+          <TableHead />
+          <TableHead class="text-center">
+            <Carousel class="w-[350px] max-w-full m-auto">
+              <CarouselContent>
+                <CarouselItem
+                  v-for="(image, index) in payload.images"
+                  :key="index"
+                >
+                  <NuxtImg
+                    :src="image.url"
+                    class="w-[350px] max-w-full inline-block"
+                  />
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </TableHead>
         </TableRow>
+      </TableHeader>
 
-        <!-- Special handling for wheels array -->
-        <template
-          v-if="
-            Array.isArray(value) &&
-            value.length > 0 &&
-            typeof value[0] === 'object'
-          "
-        >
+      <div class="mb-4" />
+
+      <TableBody>
+        <template v-for="(value, key) in payload.specs" :key="key">
+          <!-- Parent property row -->
           <TableRow
-            v-for="subKey in ['name', 'size']"
-            :key="subKey"
-            class="bg-sky-50 dark:hover:bg-white"
+            class="border-none bg-sky-50"
+            :class="[
+              {
+                'hover:bg-sky-50':
+                  hasChildren(value) ||
+                  (Array.isArray(value) &&
+                    value.length > 0 &&
+                    typeof value[0] === 'object'),
+                'dark:hover:bg-white':
+                  !hasChildren(value) &&
+                  (!Array.isArray(value) || typeof value[0] !== 'object'),
+              },
+            ]"
           >
             <TableCell class="font-medium">
-              {{ formatHeader(subKey) }}
+              {{ formatHeader(key) }}
             </TableCell>
-            <TableCell class="border-l">
-              {{
-                Array.isArray(payload.specs[key])
-                  ? payload.specs[key][0]?.[subKey]
-                  : "-"
-              }}
+            <TableCell
+              :class="{
+                'border-l':
+                  typeof value !== 'object' ||
+                  (Array.isArray(value) && typeof value[0] !== 'object'),
+              }"
+            >
+              <span
+                v-if="
+                  typeof value !== 'object' ||
+                  (Array.isArray(value) && typeof value[0] !== 'object')
+                "
+              >
+                {{ formatValue(payload.specs[key]) }}
+              </span>
             </TableCell>
           </TableRow>
-        </template>
 
-        <div v-if="!hasChildren(value)" class="flex mb-4" />
-
-        <!-- Child properties for objects -->
-        <template v-if="hasChildren(value)">
-          <TableRow
-            v-for="(subvalue, subKey) in value"
-            :key="subKey"
-            class="bg-sky-50 dark:hover:bg-white"
+          <!-- Special handling for wheels array -->
+          <template
+            v-if="
+              Array.isArray(value) &&
+              value.length > 0 &&
+              typeof value[0] === 'object'
+            "
           >
-            <TableCell class="font-medium">
-              {{ formatHeader(subKey) }}
-            </TableCell>
-            <TableCell class="border-l">
-              {{ formatValue(payload.specs[key]?.[subKey]) }}
-            </TableCell>
-          </TableRow>
+            <TableRow
+              v-for="subKey in ['name', 'size']"
+              :key="subKey"
+              class="bg-sky-50 dark:hover:bg-white"
+            >
+              <TableCell class="font-medium">
+                {{ formatHeader(subKey) }}
+              </TableCell>
+              <TableCell class="border-l">
+                {{
+                  Array.isArray(payload.specs[key])
+                    ? payload.specs[key][0]?.[subKey]
+                    : "-"
+                }}
+              </TableCell>
+            </TableRow>
+          </template>
+
+          <div v-if="!hasChildren(value)" class="flex mb-4" />
+
+          <!-- Child properties for objects -->
+          <template v-if="hasChildren(value)">
+            <TableRow
+              v-for="(subvalue, subKey) in value"
+              :key="subKey"
+              class="bg-sky-50 dark:hover:bg-white"
+            >
+              <TableCell class="font-medium">
+                {{ formatHeader(subKey) }}
+              </TableCell>
+              <TableCell class="border-l">
+                {{ formatValue(payload.specs[key]?.[subKey]) }}
+              </TableCell>
+            </TableRow>
+          </template>
+          <div v-if="hasChildren(value)" class="flex mb-4" />
         </template>
-        <div v-if="hasChildren(value)" class="flex mb-4" />
-      </template>
-    </TableBody>
-  </Table>
+      </TableBody>
+    </Table>
+  </div>
 </template>
