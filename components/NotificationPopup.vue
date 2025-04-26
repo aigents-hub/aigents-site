@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AutomobileComponent from "@/components/events/AutomobileComponent.vue";
-import ComparisonComponent from "~/components/events/ComparisonComponent.vue";
+import ComparisonComponent from "@/components/events/ComparisonComponent.vue";
+import NewsComponent from "@/components/events/NewsComponent.vue";
 import ProvidersComponent from "@/components/events/ProvidersComponent.vue";
 import { SessionEvent } from "@/types/session-event.enum";
 
@@ -20,6 +21,8 @@ const currentComponent = computed(() => {
       return AutomobileComponent;
     case SessionEvent.COMPARISON:
       return ComparisonComponent;
+    case SessionEvent.NEWS:
+      return NewsComponent;
     case SessionEvent.PROVIDERS:
       return ProvidersComponent;
     default:
