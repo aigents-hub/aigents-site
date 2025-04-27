@@ -88,7 +88,7 @@ const startStreaming = async () => {
   // capture mic
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   mediaStream = stream; // Store the stream reference
-  audioContext = new AudioContext({ sampleRate: 16000 });
+  audioContext = new AudioContext({ sampleRate: 24000 });
   sourceNode = audioContext.createMediaStreamSource(stream);
   processor = audioContext.createScriptProcessor(4096, 1, 1);
 
@@ -131,7 +131,11 @@ const tryPlayNext = () => {
   isPlaying = true;
   const pcm16 = playQueue.shift()!;
   const float32 = convertInt16ToFloat32(pcm16);
-  const buffer = audioContext.createBuffer(1, float32.length, 16000);
+  const buffer = audioContext.createBuffer(
+    1,
+    float32.length,
+    audioContext.sampleRate
+  );
   buffer.getChannelData(0).set(float32);
 
   const src = audioContext.createBufferSource();
