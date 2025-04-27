@@ -3,4 +3,5 @@ export enum SessionEvent {
   COMPARISON = "Comparativa",
   NEWS = "News",
   PROVIDERS = "Proveedores",
+  SEARCHING = "searching",
 }

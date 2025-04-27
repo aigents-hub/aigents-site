@@ -6,6 +6,7 @@ export default {
   disconnected: "Disconnected",
   news: "News",
   readMore: "Read more",
+  searching: "Searching...",
   selectLanguage: "Select Language",
   sessionId: "Session ID",
   slogan: "Find your next car",

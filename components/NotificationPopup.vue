@@ -4,6 +4,7 @@ import ComparisonComponent from "@/components/events/ComparisonComponent.vue";
 import NewsComponent from "@/components/events/NewsComponent.vue";
 import ProvidersComponent from "@/components/events/ProvidersComponent.vue";
 import { SessionEvent } from "@/types/session-event.enum";
+import SearchingComponent from "./events/SearchingComponent.vue";
 
 const props = defineProps<{
   sessionId: string;
@@ -12,6 +13,7 @@ const props = defineProps<{
 
 const ws = ref<WebSocket | null>(null);
 const visible = ref(false);
+const loading = ref(false);
 const payload = ref<any>(null);
 const eventType = ref<SessionEvent | null>(null);
 
@@ -25,6 +27,8 @@ const currentComponent = computed(() => {
       return NewsComponent;
     case SessionEvent.PROVIDERS:
       return ProvidersComponent;
+    case SessionEvent.SEARCHING:
+      return SearchingComponent;
     default:
       return null;
   }
@@ -48,18 +52,31 @@ onMounted(() => {
     if (msg.event && msg.payload !== undefined) {
       eventType.value = msg.event;
       payload.value = msg.payload;
-      visible.value = true;
+      if (msg.event !== "searching") {
+        visible.value = true;
+      } else {
+        loading.value = true;
+      }
     }
   };
 });
 </script>
 
 <template>
-  <div v-if="visible">
-    <AppModal v-model="visible">
-      <div class="text-black mt-8 mb-4">
-        <component :is="currentComponent" :payload="payload" />
-      </div>
-    </AppModal>
+  <div>
+    <component
+      v-if="loading"
+      v-model:loading="loading"
+      :is="currentComponent"
+      :payload="payload.searching"
+    />
+
+    <div v-if="visible">
+      <AppModal v-model="visible">
+        <div class="text-black mt-8 mb-4">
+          <component :is="currentComponent" :payload="payload" />
+        </div>
+      </AppModal>
+    </div>
   </div>
 </template>

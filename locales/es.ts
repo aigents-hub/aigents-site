@@ -6,6 +6,7 @@ export default {
   disconnected: "Desconectado",
   news: "Noticias",
   readMore: "Leer más",
+  searching: "Buscando...",
   selectLanguage: "Seleccionar Idioma",
   sessionId: "ID de Sesión",
   slogan: "Encuentra tu próximo auto",

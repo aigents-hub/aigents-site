@@ -51,10 +51,10 @@ const toggleSession = () => {
     </Button>
 
     <ConversationComponent :session-id="sessionId" :host="host" />
-    <NotificationPopup v-if="sessionId" :session-id="sessionId" :host="host" />
     <p v-if="error" class="text-destructive">{{ error }}</p>
     <p v-if="sessionId" class="text-xl">
       {{ t("sessionId") }}: {{ sessionId }}
     </p>
+    <NotificationPopup v-if="sessionId" :session-id="sessionId" :host="host" />
   </div>
 </template>
