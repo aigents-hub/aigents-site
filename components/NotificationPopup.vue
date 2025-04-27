@@ -52,7 +52,7 @@ onMounted(() => {
     if (msg.event && msg.payload !== undefined) {
       eventType.value = msg.event;
       payload.value = msg.payload;
-      if (msg.event !== "searching") {
+      if (msg.event !== "Searching") {
         visible.value = true;
       } else {
         loading.value = true;
