@@ -59,16 +59,19 @@ const hasChildren = (value: unknown): boolean => {
         <TableRow class="border-none bg-white hover:bg-white">
           <TableHead />
           <TableHead
-            v-for="car in payload.cars"
+            v-for="(car, index) in payload.cars"
             :key="car.specs.model"
             class="items-center text-center"
           >
             <Carousel class="w-[350px] max-w-full m-auto">
               <CarouselContent>
-                <CarouselItem v-for="(image, index) in car.images" :key="index">
+                <CarouselItem
+                  v-for="(image, subindex) in car.images"
+                  :key="subindex"
+                >
                   <NuxtImg
-                    :src="image.url"
-                    class="w-[350px] max-w-full inline-block"
+                    :src="`/images/cars/${index + 1}/${subindex + 1}.jpg`"
+                    class="w-[250px] max-w-full inline-block"
                   />
                 </CarouselItem>
               </CarouselContent>

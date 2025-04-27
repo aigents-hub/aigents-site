@@ -66,7 +66,7 @@ const hasChildren = (value: unknown): boolean => {
                   :key="index"
                 >
                   <NuxtImg
-                    :src="image.url"
+                    :src="`/images/cars/1/${index + 1}.jpg`"
                     class="w-[350px] max-w-full inline-block"
                   />
                 </CarouselItem>
