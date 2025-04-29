@@ -1,0 +1,16 @@
+export default {
+  carComparisonTable: "Car comparison table",
+  carSpecs: "Car specifications",
+  connected: "Connected",
+  close: "Close",
+  disconnected: "Disconnected",
+  news: "News",
+  readMore: "Read more",
+  searching: "Searching...",
+  selectLanguage: "Select Language",
+  sessionId: "Session ID",
+  slogan: "Find your next car",
+  source: "Source",
+  startSession: "Start Session",
+  stopSession: "Stop Session",
+};
